@@ -20,6 +20,10 @@ Deployed on **Sepolia Testnet** and integrated with **MetaMask**.
 
 ---
 
+## 🚀 Live Demo
+👉 [Click here to try the app](https://coinflip-dapp-neon.vercel.app/)
+
+
 ## 🛠️ Installation & Setup
 
 1. Clone the repository:
@@ -32,26 +36,26 @@ Deployed on **Sepolia Testnet** and integrated with **MetaMask**.
     npm start
 The app will be available at http://localhost:3000
 
-📜 Smart Contract
+## 📜 Smart Contract
 
 Contract: contracts/CoinFlip.sol
 Network: Sepolia Testnet
 Example deployed address: 0x9d2C68fa1199B8B720e59B4E18264C81cCacDafA
 Verify transactions: Sepolia Etherscan
 
-🔗 Connecting MetaMask
+## 🔗 Connecting MetaMask
 Open MetaMask.
 Add Sepolia Test Network (if not already available).
 Fund your wallet with Sepolia ETH from a faucet
 Connect wallet in the DApp and start flipping!
 
-🧑‍💻 Technologies Used
-Solidity
-Hardhat / Remix (for deployment)
-React.js (Frontend)
-Ethers.js (Blockchain interaction)
-TailwindCSS (Styling)
+## 🧑‍💻 Technologies Used
+1.  Solidity
+2.  Hardhat / Remix (for deployment)
+3.  React.js (Frontend)
+4.  Ethers.js (Blockchain interaction)
+5.  TailwindCSS (Styling)
 
-📄 License
+## 📄 License
 This project is licensed under the MIT License.
 Feel free to use, modify, and share!
