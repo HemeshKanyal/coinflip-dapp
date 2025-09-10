@@ -1,32 +1,36 @@
 // src/App.js
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import './index.css';
-
+import "./index.css";
 
 const contractAddress = "0x9d2C68fa1199B8B720e59B4E18264C81cCacDafA"; // deployed address
 const contractABI = [
   {
-    "anonymous": false,
-    "inputs": [
-      { "indexed": true, "internalType": "address", "name": "player", "type": "address" },
-      { "indexed": false, "internalType": "bool", "name": "result", "type": "bool" },
-      { "indexed": false, "internalType": "uint256", "name": "amountWon", "type": "uint256" }
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "address", name: "player", type: "address" },
+      { indexed: false, internalType: "bool", name: "result", type: "bool" },
+      { indexed: false, internalType: "uint256", name: "amountWon", type: "uint256" }
     ],
-    "name": "CoinFlipped",
-    "type": "event"
+    name: "CoinFlipped",
+    type: "event"
   },
-  { "inputs": [], "name": "flipcoin", "outputs": [], "stateMutability": "payable", "type": "function" },
-  { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
-  { "stateMutability": "payable", "type": "receive" },
+  { inputs: [], name: "flipcoin", outputs: [], stateMutability: "payable", type: "function" },
+  { inputs: [], stateMutability: "nonpayable", type: "constructor" },
+  { stateMutability: "payable", type: "receive" },
   {
-    "inputs": [],
-    "name": "contractBalance",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
+    inputs: [],
+    name: "contractBalance",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function"
   }
 ];
+
+// ✅ Fallback provider for HTTPS (replace with your own Infura/Alchemy key)
+const fallbackProvider = new ethers.JsonRpcProvider(
+  "https://sepolia.infura.io/v3/YOUR_INFURA_KEY"
+);
 
 function App() {
   const [account, setAccount] = useState(null);
@@ -48,8 +52,10 @@ function App() {
 
   // Fetch contract balance
   const fetchContractBalance = async () => {
-    if (!window.ethereum) return;
-    const provider = new ethers.BrowserProvider(window.ethereum);
+    const provider = window.ethereum
+      ? new ethers.BrowserProvider(window.ethereum)
+      : fallbackProvider;
+
     const contract = new ethers.Contract(contractAddress, contractABI, provider);
     const bal = await contract.contractBalance();
     setBalance(ethers.formatEther(bal));
@@ -87,15 +93,25 @@ function App() {
     }
   };
 
+  // Auto-check wallet connection on load
   useEffect(() => {
-    if (window.ethereum) connectWallet();
+    if (window.ethereum) {
+      window.ethereum.request({ method: "eth_accounts" }).then((accounts) => {
+        if (accounts.length > 0) {
+          setAccount(accounts[0]);
+          fetchContractBalance();
+        }
+      });
+    } else {
+      // Still fetch balance with fallback
+      fetchContractBalance();
+    }
   }, []);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-purple-700 via-indigo-800 to-gray-900 text-white">
       <div className="p-8 rounded-2xl shadow-xl bg-black/40 backdrop-blur-md w-full max-w-md text-center">
         <h1 className="text-4xl font-bold text-purple-600">🎲 Coin Flip DApp</h1>
-
 
         {account ? (
           <p className="mb-3 text-sm">Connected: <span className="font-mono">{account}</span></p>
